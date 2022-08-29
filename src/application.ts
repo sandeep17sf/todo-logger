@@ -1,5 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import {ApplicationConfig, extensionFor} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -8,6 +8,8 @@ import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
+import {LoggingBindings, LoggingComponent, WinstonLoggerOptions, WinstonTransports, WINSTON_TRANSPORT} from '@loopback/logging';
+import {format} from 'winston';
 import {MySequence} from './sequence';
 
 export {ApplicationConfig};
@@ -17,7 +19,7 @@ export class TodoLoggerApplication extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-
+    const app = this;
     // Set up the custom sequence
     this.sequence(MySequence);
 
@@ -29,6 +31,17 @@ export class TodoLoggerApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+    app.configure(LoggingBindings.COMPONENT).to({
+      enableFluent: false,
+      enableHttpAccessLog: false,
+    });
+    app.component(LoggingComponent);
+   
+    app.configure(LoggingBindings.WINSTON_LOGGER).to({
+      level: 'info',
+      format: format.json(),
+      defaultMeta: {framework: 'LoopBack'},
+    });
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
