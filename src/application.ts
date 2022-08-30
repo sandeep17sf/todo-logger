@@ -11,6 +11,7 @@ import path from 'path';
 import {LoggingBindings, LoggingComponent, WinstonLoggerOptions, WinstonTransports, WINSTON_TRANSPORT} from '@loopback/logging';
 import {format} from 'winston';
 import {MySequence} from './sequence';
+import CookieJWtMiddleware from "./middleware/cookie-jwt.middleware";
 
 export {ApplicationConfig};
 
@@ -20,6 +21,8 @@ export class TodoLoggerApplication extends BootMixin(
   constructor(options: ApplicationConfig = {}) {
     super(options);
     const app = this;
+     // add middleware
+     this.middleware(CookieJWtMiddleware)
     // Set up the custom sequence
     this.sequence(MySequence);
 

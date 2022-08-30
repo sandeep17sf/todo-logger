@@ -19,6 +19,8 @@ export class MySequence extends MiddlewareSequence {
         level: 'info',
         message: `${request.method} ${request.originalUrl}`
       });
-    await this.invokeMiddleware(context, this.options);
+    
+      const finished = await this.invokeMiddleware(context,this.options);
+      if (finished) return;
   }
 }
