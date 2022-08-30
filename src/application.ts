@@ -1,5 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig, extensionFor} from '@loopback/core';
+import {ApplicationConfig } from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -8,7 +8,7 @@ import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
-import {LoggingBindings, LoggingComponent, WinstonLoggerOptions, WinstonTransports, WINSTON_TRANSPORT} from '@loopback/logging';
+import {LoggingBindings, LoggingComponent } from '@loopback/logging';
 import {format} from 'winston';
 import {MySequence} from './sequence';
 import CookieJWtMiddleware from "./middleware/cookie-jwt.middleware";
@@ -20,7 +20,7 @@ export class TodoLoggerApplication extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-    const app = this;
+  
      // add middleware
      this.middleware(CookieJWtMiddleware)
     // Set up the custom sequence
@@ -34,13 +34,13 @@ export class TodoLoggerApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
-    app.configure(LoggingBindings.COMPONENT).to({
+    this.configure(LoggingBindings.COMPONENT).to({
       enableFluent: false,
       enableHttpAccessLog: false,
     });
-    app.component(LoggingComponent);
+    this.component(LoggingComponent);
    
-    app.configure(LoggingBindings.WINSTON_LOGGER).to({
+    this.configure(LoggingBindings.WINSTON_LOGGER).to({
       level: 'info',
       format: format.json(),
       defaultMeta: {framework: 'LoopBack'},
